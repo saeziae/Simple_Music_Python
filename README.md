@@ -24,21 +24,23 @@ write like this in `in.txt`, then run `new_make.py`
 Here is the low-level method:
 
 `music.txt` format:
-> tone **\\t** beats  
-> tone **\\t** beats  
-> tone **\\t** beats  
-> tone **\\t** beats  
-> tone **\\t** beats  
-> ...
-
-For example (do NOT copy this, it is all spaces, you'll need to use TAB instead)
 ```
-C4  0.5
-D4  0.5
-E4  1
-D4  0.75
-C4  0.25
-C4  1
+tone beats  
+tone beats  
+tone beats  
+tone beats  
+tone beats  
+...
+```
+
+For example
+```
+C4 0.5
+D4 0.5
+E4 1
+D4 0.75
+C4 0.25
+C4 1
 ```
 significar:
 ```
