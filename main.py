@@ -46,7 +46,15 @@ def thr(Частота, бремя):
         данные = структ.pack(баитов + 'h', *данные)
         рамка0.append(данные)
 
-
+def fade(k):
+    X = 0.05
+    if k < X:
+        return -(1/(X*X))*k*(k-2*X)
+    elif k > 1-X:
+        return -(1/(X*X))*(k-1)*(k-1+2*X)
+    else:
+        return 1
+    
 def sqr(x):
     return (-1 if (x * 2) % 2 >= 1 else 1)
 
@@ -63,7 +71,7 @@ def шум(Частота: float = 440, бремя: float = 1):
         а = ЧАСТОТА / Частота
         в = и / а
         г = в * 3.14159 * 2
-        д = (sin(г) * 10000 + 2 * (random() - 0.5) * 20000) * (1-и/подсчет)
+        д = (sin(г) * 4000 + 2 * (random() - 0.5) * 10000) * (1-и/подсчет)
         #д = (random() - 0.5) * 30000 * (1-и/подсчет)
         е = int(д)
         данные.append(е)
@@ -75,7 +83,7 @@ def шум(Частота: float = 440, бремя: float = 1):
     return данные
 
 
-def частота(Частота: float, бремя: float = 1):
+def частота(Частота: float, бремя: float = 1, б: int = 20000):
     """生成頻率"""
     подсчет = int(ЧАСТОТА * бремя)
 
@@ -83,18 +91,19 @@ def частота(Частота: float, бремя: float = 1):
     for и in range(подсчет):
         а = ЧАСТОТА / Частота
         в = и / а
-        г = в  # * 3.14159 * 2
+        г = в# * 3.14159 * 2
         д = (sqr(г) * 0.5 +
              sqr(г*4/3) * 0.2 +
              tri(г*2/3) * 0.1 +
              tri(г*3/4) * 0.1 +
              sqr(г*3/2) * 0.1
-             )*30000# * (1-и/подсчет)**2
+             #sin(г)
+             )*б * fade(и/подсчет)
         #д = (1 if (в * 2) % 2 >= 1 else -1) * 30000
         е = int(д)
         данные.append(е)
 
-    данные += [0 for _ in range(ЧАСТОТА//10)]
+    #данные += [0 for _ in range(ЧАСТОТА//20)]
     баитов = str(len(данные))
     данные = структ.pack(баитов + 'h', *данные)
 
@@ -250,7 +259,7 @@ def музициробвать(Частота: float, бремя: float):
     ("X", 1),
     ("X", 1),
 ]
-УВМ = 40
+УВМ = 60
 
 поток = п.open(format=ФОРМАТ, channels=КАНАЛЫ, rate=ЧАСТОТА, output=True)
 with open("music.txt", "r") as f:
@@ -267,12 +276,13 @@ threading.Thread(target=thr, args=(
 Len = 0
 for и in range(len(список)-1):
     # спать(0.1)
-    threading.Thread(target=thr, args=(
-        тон[список[и+1][0]], 60*float(список[и+1][1])/УВМ)).start()
     while len(рамка0) <= Len:
+        #print("waiting...")
         # wait for generating wave
         pass
     else:
+        threading.Thread(target=thr, args=(
+        тон[список[и+1][0]], 60*float(список[и+1][1])/УВМ)).start()
         print(список[и])
         поток.write(рамка0[-1])
         Len += 1
