@@ -28,12 +28,15 @@ import threading
 
 рамка0 = []
 
+def оказывать(перечень):
+    for и in перечень:
+        thr(тон[и[0]], 60*float(и[1])/УВМ)
 
 def thr(Частота, бремя):
-    спать(0.1)
+    #спать(0.05)
     pass
     if Частота == 1:
-        # спать(0.1)
+        #спать(0.05)
         рамка = шум(440, бремя)
         рамка0.append(рамка)
     elif Частота != 0:
@@ -97,7 +100,7 @@ def частота(Частота: float, бремя: float = 1, б: int = 20000
              tri(г*2/3) * 0.1 +
              tri(г*3/4) * 0.1 +
              sqr(г*3/2) * 0.1
-             #sin(г)
+            # sin(г)
              )*б * fade(и/подсчет)
         #д = (1 if (в * 2) % 2 >= 1 else -1) * 30000
         е = int(д)
@@ -270,27 +273,19 @@ with open("music.txt", "r") as f:
 
 # музициробвать(тон[и[0]], float(и[1])/УВМ*60)
 ###################################################################
-threading.Thread(target=thr, args=(
-    тон[список[0][0]], 60*float(список[0][1])/УВМ)).start()
+
+threading.Thread(target=оказывать, args=(список,)).start()
 спать(1)
-Len = 0
-for и in range(len(список)-1):
-    # спать(0.1)
-    while len(рамка0) <= Len:
+
+for и in range(len(список)):
+    while len(рамка0) < и+1 :
         #print("waiting...")
         # wait for generating wave
         pass
-    else:
-        threading.Thread(target=thr, args=(
-        тон[список[и+1][0]], 60*float(список[и+1][1])/УВМ)).start()
+    else: 
         print(список[и])
-        поток.write(рамка0[-1])
-        Len += 1
-while len(рамка0) <= Len:
-    # wait for generating wave
-    pass
-else:
-    поток.write(рамка0[-1])
+        поток.write(рамка0[и])
+
 ###################################################################
 поток.stop_stream()
 поток.close()
